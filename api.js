@@ -28,10 +28,8 @@ api.delete("/entities/:id", async (req, res) => {
 // GET route to return specific entity and related incidents
 api.get("/entities/:id", async (req, res) => {
     const id = parseInt(req.params.id);
-    const data = await db.query("SELECT * FROM entities as E JOIN incidents as I ON E.entity_id = I.entity_id WHERE entity_name = $1", [id]);
-    console.log(data)
-    res.send(data.rows);
-    res.send(`Showing incidents related to ${id}`)
+    const data = await db.query("SELECT * FROM entities as E JOIN incidents as I ON E.entity_id = I.entity_id WHERE E.entity_id = $1", [id]);
+    res.send(data.rows[0]);
 })
 
 // POST route to add location
