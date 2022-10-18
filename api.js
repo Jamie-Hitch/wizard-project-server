@@ -44,7 +44,7 @@ api.post("/locations", async (req, res) => {
 })
 
 // GET route to return specific entity and related incidents
-api.get("/entities/:name", async (req, res) => {
+api.get("/locations/:name", async (req, res) => {
     const name = req.params.name;
     const idData = await db.query("SELECT location_id FROM locations WHERE location_name = $1", [name]);
     const id = parseInt(idData.rows[0].entity_id);
