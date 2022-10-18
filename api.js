@@ -26,10 +26,14 @@ api.delete("/entities/:id", async (req, res) => {
 })
 
 // GET route to return specific entity and related incidents
-api.get("/entities/:id", async (req, res) => {
-    const id = parseInt(req.params.id);
-    const data = await db.query("SELECT * FROM entities as E JOIN incidents as I ON E.entity_id = I.entity_id WHERE E.entity_id = $1", [id]);
-    res.send(data.rows[0]);
+api.get("/entities/:name", async (req, res) => {
+    const name = req.params.name;
+    const idData = await db.query("SELECT entity_id FROM entities WHERE entity_name = $1", [name]);
+    const id = parseInt(idData.rows[0].entity_id);
+    const data = await db.query(
+      "SELECT * FROM entities as E JOIN incidents as I ON E.entity_id = I.entity_id WHERE E.entity_id = $1", [id]
+    );
+    res.send(data.rows)
 })
 
 // POST route to add location
@@ -37,6 +41,17 @@ api.post("/locations", async (req, res) => {
     const { locationName } = req.body
     await db.query("INSERT INTO locations (location_name) VALUES ($1)", [locationName]);
     res.send(`${locationName} added to the locations database`);
+})
+
+// GET route to return specific entity and related incidents
+api.get("/entities/:name", async (req, res) => {
+    const name = req.params.name;
+    const idData = await db.query("SELECT location_id FROM locations WHERE location_name = $1", [name]);
+    const id = parseInt(idData.rows[0].entity_id);
+    const data = await db.query(
+      "SELECT * FROM locations as L JOIN incidents as I ON L.location_id = I.Location_id WHERE L.location_id_id = $1", [id]
+    );
+    res.send(data.rows)
 })
 
 // DELETE route for location
